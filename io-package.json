@@ -1,0 +1,74 @@
+{
+	"common": {
+		"name": "allnetipsocketoutlet4176",
+		"version": "0.0.1",
+		"news": {
+			"0.0.1": {
+				"en": "initial release",
+				"de": "Erstveröffentlichung",
+				"ru": "Начальная версия",
+				"pt": "lançamento inicial",
+				"nl": "Eerste uitgave",
+				"fr": "Première version",
+				"it": "Versione iniziale",
+				"es": "Versión inicial",
+				"pl": "Pierwsze wydanie",
+				"zh-cn": "首次出版"
+			}
+		},
+		"title": "ALLNET IP Socket Outlet 4176",
+		"titleLang": {
+			"en": "ALLNET IP Socket Outlet 4176",
+			"de": "ALLNET IP-Steckdose 4176",
+			"ru": "Розетка ALLNET для IP-розетки 4176",
+			"pt": "Tomada de IP de ALLNET 4176",
+			"nl": "ALLNET IP-socketuitgang 4176",
+			"fr": "ALLNET Prise de courant IP 4176",
+			"it": "Presa IP ALLNET IP 4176",
+			"es": "Toma de corriente ALLNET IP 4176",
+			"pl": "Gniazdo ALLNET IP 4176",
+			"zh-cn": "ALLNET IP插座插座4176"
+		},
+		"desc": {
+			"en": "ALLNET IP Socket Outlet 4176 with 6 sockets",
+			"de": "ALLNET IP-Steckdose 4176 mit 6 Steckdosen",
+			"ru": "Розетка ALLNET для IP-розеток 4176 с 6 розетками",
+			"pt": "Tomada IP 4KI ALLNET IP com 6 soquetes",
+			"nl": "ALLNET IP-socketuitgang 4176 met 6 sockets",
+			"fr": "ALLNET IP Socket Prise 4176 avec 6 prises",
+			"it": "Presa IP ALLNET IP 4176 con 6 prese",
+			"es": "Toma de corriente ALLNET IP 4176 con 6 tomas",
+			"pl": "Gniazdo ALLNET IP 4176 z 6 gniazdami",
+			"zh-cn": "带有6个插座的ALLNET IP插座插座4176"
+		},
+		"authors": [
+			"mghomedev <mghomedev@gmx.de>"
+		],
+		"keywords": [
+			"socket outlet ip"
+		],
+		"license": "MIT",
+		"platform": "Javascript/Node.js",
+		"main": "build/main.js",
+		"icon": "allnetipsocketoutlet4176.png",
+		"enabled": true,
+		"extIcon": "https://raw.githubusercontent.com/mghomedev/ioBroker.allnetipsocketoutlet4176/master/admin/allnetipsocketoutlet4176.png",
+		"readme": "https://github.com/mghomedev/ioBroker.allnetipsocketoutlet4176/blob/master/README.md",
+		"loglevel": "info",
+		"mode": "daemon",
+		"type": "hardware",
+		"compact": true,
+		"materialize": true,
+		"dependencies": [
+			{
+				"js-controller": ">=1.4.2"
+			}
+		]
+	},
+	"native": {
+		"option1": true,
+		"option2": "42"
+	},
+	"objects": [],
+	"instanceObjects": []
+}
