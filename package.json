@@ -16,7 +16,10 @@
     "url": "https://github.com/mghomedev/ioBroker.allnetipsocketoutlet4176"
   },
   "dependencies": {
-    "@iobroker/adapter-core": "^1.0.3"
+    "@iobroker/adapter-core": "^1.0.3",
+    "fetch-headers": "^2.0.0",
+    "node-fetch": "^2.6.0",
+    "xml-js": "^1.6.11"
   },
   "devDependencies": {
     "@iobroker/testing": "^1.2.5",
