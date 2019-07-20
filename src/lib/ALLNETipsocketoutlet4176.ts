@@ -8,7 +8,7 @@ const convertXMLJS = require('xml-js');
 
 
 
-export function requestXMLGetFromSimpleHTTP(url: string, username: string | undefined, password: string| undefined) {
+export function requestXMLGetFromSimpleHTTP(url: string, username: string | undefined, password: string| undefined, debugOutToConsole : boolean) {
   let headers = new Headers();
 
   headers.append('Content-Type', 'text/xml');
@@ -30,7 +30,7 @@ export function requestXMLGetFromSimpleHTTP(url: string, username: string | unde
       if (str.trim().startsWith("<error>")) throw ("DeviceReturnedErrorAsXML(" + str + ")");
       try {
         let json = convertXMLJS.xml2json(str, { compact: true, spaces: 4 });
-        console.log("ALLNET.requestXMLGet:" + json);
+        if (debugOutToConsole) console.log("ALLNET.requestXMLGet:" + json);
 
         return JSON.parse(json);
       } catch (e) {
@@ -45,13 +45,13 @@ export function requestXMLGetFromSimpleHTTP(url: string, username: string | unde
     });
 }
 
-class ALLNETipsocketoutlet4176Actor {
+export class ALLNETipsocketoutlet4176Actor {
   public id: string | undefined = undefined;
   public name: string | undefined = undefined;
   public state: boolean | undefined = undefined;
 };
 
-class ALLNETipsocketoutlet4176Sensor {
+export class ALLNETipsocketoutlet4176Sensor {
   public id: string | undefined = undefined;
   public name: string | undefined = undefined;
   public current: number | undefined = undefined;
@@ -59,11 +59,13 @@ class ALLNETipsocketoutlet4176Sensor {
 
 };
 
-class ALLNETipsocketoutlet4176 {
+export class ALLNETipsocketoutlet4176 {
 
   public ALLNETURL: string | undefined = undefined;
   public ALLNETUSER: string | undefined = undefined;
   public ALLNETPASSWORD: string | undefined = undefined;
+
+  public debugXMLOutToConsole : boolean = false;
 
   public hardware_model: string | undefined = undefined;
   public hardware_revision: string | undefined = undefined;
@@ -97,7 +99,7 @@ class ALLNETipsocketoutlet4176 {
     if (action != null && action.length > 0) {
       action += "&action=" + action;
     }
-    return requestXMLGetFromSimpleHTTP(url, this.ALLNETUSER, this.ALLNETPASSWORD);
+    return requestXMLGetFromSimpleHTTP(url, this.ALLNETUSER, this.ALLNETPASSWORD, this.debugXMLOutToConsole);
   }
 
   private _actors: ALLNETipsocketoutlet4176Actor[] = [];
@@ -214,3 +216,24 @@ class ALLNETipsocketoutlet4176 {
 }
 
 
+export function ALLNETIPrequestXMLTest() {
+
+	let ALLNETURL  = "http://192.168.1.111:80/xml/";
+	let ALLNETUSER = "user";
+	let ALLNETPASSWORD = "passwd";
+  
+	let allNet = new ALLNETipsocketoutlet4176(ALLNETURL, ALLNETUSER, ALLNETPASSWORD);
+	//allNet.doXMLRequest("actor", "list", "", "");
+  return allNet.triggerUpdateAllStates().then(
+    (obj:any)=> {
+      if (allNet.device_name==null) throw "allNet.device_name missing";      
+      console.log("ALLNETIPrequestXMLTest finished on ALLNET-DeviceName=" + allNet.device_name);
+      return true;
+   })
+  .catch(function (error: any) {                        // catch
+    console.log('ALLNETIPrequestXMLTest failed', error);
+    return false;
+  });
+	
+}
+ // ALLNETIPrequestXMLTest();
