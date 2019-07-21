@@ -14,8 +14,31 @@
 
 ALLNET IP Socket Outlet 4176 with 6 sockets
 
+## User manual 
+
+This is an ioBroker Home Automation Adapter for the ALLNET ALL4176 IP/WIFI Socket Outlet with 6 sockets
+
+https://www.allnet.de/de/allnet-brand/produkte/neuheiten/p/allnet-all4176-ip-steckdosenleiste-6-fach-schaltbar-per-netzwerk/
+
+This device and the adapter allows to switch all sockets and reports all sensor data e.g. the used power,state of current switches, voltages currents etc.
+
+( German: Adapter für die IP/WLAN gesteuerte 6-fach Steckdosenleiste von ALLNET ALL4176 )
+
+To use the adapter, the XML-Interface must be activated for a user in the ALLNET ALL4176 device, which means:
+- find out the hostname/ip address of your ALLNET device
+- log into it with a web browser
+- go to "Configuration"-> "Server and users"
+- in "Servers and users"->"User Settings"  add a user/password with rights "View & Switch" and with user type "Remote Control". 
+- in "Servers and users"->"Access control" enable "Access Control" and enable "Activate Remote Control" - ("Slave mode" can stay disabled, I do not know what that is)
+
+- Then test if you can access the xml-API-url "http://<hostname>/xml"  with your user/password. 
+- On success, it will display the API description with title "XML Help"
+
+- Then, in ioBroker install the adapter, and enter the xml-API-url, the username and password in the adapter settings. 
+
 ## Developer manual
-This section is intended for the developer. It can be deleted later
+
+The implementation is based on my interface class "ALLNETipsocketoutlet4176" which is available in the lib folder and on github here https://github.com/mghomedev/ioBroker.ALLNETipsocketoutlet4176/blob/master/src/lib/ALLNETipsocketoutlet4176.ts
 
 ### Getting started
 

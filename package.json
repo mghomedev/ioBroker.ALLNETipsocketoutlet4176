@@ -45,7 +45,10 @@
     "sinon-chai": "^3.3.0",
     "source-map-support": "^0.5.12",
     "ts-node": "^8.3.0",
-    "typescript": "^3.5.3"
+    "typescript": "^3.5.3",
+    "node-fetch": "^2.6.0",
+    "fetch-headers": "^2.0.0",
+    "xml-js": "^1.6.11"
   },
   "main": "build/main.js",
   "scripts": {

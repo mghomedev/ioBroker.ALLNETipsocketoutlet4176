@@ -5,7 +5,8 @@
 		"allowJs": false,
 		"checkJs": false,
 		"noEmit": false,
-		"declaration": false
+		"declaration": false,
+		"sourceMap": true, //see https://code.visualstudio.com/docs/typescript/typescript-debugging
 	},
 	"include": [
 		"src/**/*.ts"
