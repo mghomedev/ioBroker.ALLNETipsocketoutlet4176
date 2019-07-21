@@ -76,6 +76,10 @@ export class ALLNETipsocketoutlet4176 {
     console.log("ALLNETIPSocketoutlet4176Error:" + info);
   };
 
+  public onActorUpdated = function(obj: any) {};
+
+  public onSensorUpdated = function(obj: any) {};
+
   constructor(ALLNETURL: string, ALLNETUSER: string, ALLNETPASSWORD: string) {
     this.ALLNETURL = ALLNETURL;
     this.ALLNETUSER = ALLNETUSER;
@@ -97,7 +101,7 @@ export class ALLNETipsocketoutlet4176 {
       url += "&id=" + id;
     }
     if (action != null && action.length > 0) {
-      action += "&action=" + action;
+      url += "&action=" + action;
     }
     return requestXMLGetFromSimpleHTTP(
       url,
@@ -105,16 +109,28 @@ export class ALLNETipsocketoutlet4176 {
       this.ALLNETPASSWORD
     )
       .then((str: string) => {
+        var ajson = null;
         try {
+          if (str == null || str.length <= 5) return "EmptyXML";
+
           let json = convertXMLJS.xml2json(str, { compact: true, spaces: 4 });
           if (this.debugOutputXML) this.debug("ALLNET.requestXMLGet:" + json);
 
-          return JSON.parse(json);
+          ajson = JSON.parse(json);
+          if (ajson == null) throw "EmptyJSONObject after JSON.parse";
         } catch (e) {
           return Promise.reject(
             "XMLParsingError of str=" + str + ". Error=" + e
           );
         }
+
+        if (ajson == null) {
+          throw "EmptyJSONObject";
+        }
+        if (ajson.error != null) {
+          throw "ErrorJSONObject:" + str;
+        }
+        return ajson;
       })
       .catch((err: any) => {
         // catch
@@ -171,6 +187,10 @@ export class ALLNETipsocketoutlet4176 {
 
         this.debug("triggerUpdateSensorStates done for ActorCount=" + n);
 
+        for (let i = 0; i < n; i++) {
+          this.onActorUpdated(this.actors[i]);
+        }
+
         return this._actors;
       })
       .catch((err: any) => {
@@ -226,6 +246,9 @@ export class ALLNETipsocketoutlet4176 {
         }
         this.debug("triggerUpdateSensorStates done for SensorCount=" + n);
 
+        for (let i = 0; i < n; i++) {
+          this.onSensorUpdated(this._sensors[i]);
+        }
         return this._actors;
       })
       .catch((err: any) => {
@@ -286,10 +309,75 @@ export class ALLNETipsocketoutlet4176 {
         return Promise.reject("triggerUpdateAllStates failed:" + err);
       });
   }
+
+  triggerSetActorState(id: string, onOff: boolean) {
+    this.debug("triggerSetActorState(id=" + id + ", onOff=" + onOff + ")...");
+
+    return this.doXMLRequest("actor", "switch", id, onOff ? "1" : "0")
+      .then((ajson: any) => {
+        this.debug(
+          "triggerSetActorState(id=" +
+            id +
+            ", onOff=" +
+            onOff +
+            ") parsing result ..."
+        );
+
+        if (ajson == null || ajson.actor == null) {
+          throw "NoResult";
+        }
+
+        if (
+          ajson == null ||
+          ajson.actor.id == null ||
+          ajson.actor.id._text != id
+        ) {
+          throw "ActorIDMismatchInResult";
+        }
+
+        if (
+          ajson.actor.result == null ||
+          ajson.actor.result._text != (onOff ? "1" : "0")
+        ) {
+          throw "DesiredResultNotAccomplished";
+        }
+
+        for (var a of this._actors) {
+          if (a.id == id) {
+            a.state = onOff;
+            this.onActorUpdated(a);
+          }
+        }
+
+        this.debug(
+          "triggerSetActorState(id=" + id + ", onOff=" + onOff + ") done."
+        );
+        return true;
+      })
+      .catch((err: any) => {
+        // catch
+        this.error(
+          "triggerSetActorState(id=" +
+            id +
+            ", onOff=" +
+            onOff +
+            ") failed:" +
+            err
+        );
+        return Promise.reject(
+          "triggerSetActorState(id=" +
+            id +
+            ", onOff=" +
+            onOff +
+            ") failed:" +
+            err
+        );
+      });
+  }
 }
 
-export function ALLNETIPrequestXMLTest() {
-  let ALLNETURL = "http://192.168.56.1:80/xml/";
+export function ALLNETIPrequestXMLTest(invertSwitches: boolean) {
+  let ALLNETURL = "http://192.168.1.111:80/xml/";
   let ALLNETUSER = "user";
   let ALLNETPASSWORD = "password";
 
@@ -333,10 +421,43 @@ export function ALLNETIPrequestXMLTest() {
       }
       return true;
     })
+    .then((obj: any) => {
+      if (invertSwitches) {
+        for (var a of allNet.actors) {
+          if (a.id != null) {
+            let switchTo = !a.state;
+            allNet
+              .triggerSetActorState(a.id, switchTo)
+              .then((obj2: any) => {
+                console.log(
+                  "ALLNETIPrequestXMLTest successfully switched actor for id= " +
+                    a.id +
+                    " from " +
+                    a.state +
+                    " to " +
+                    switchTo
+                );
+              })
+              .catch((err: any) => {
+                console.log(
+                  "ALLNETIPrequestXMLTest failed to switched actor for id= " +
+                    a.id +
+                    " from " +
+                    a.state +
+                    " to " +
+                    switchTo,
+                  err
+                );
+              });
+          }
+        }
+      }
+    })
     .catch((err: any) => {
       // catch
       console.log("ALLNETIPrequestXMLTest failed", err);
       return false;
     });
 }
-//ALLNETIPrequestXMLTest();
+
+ALLNETIPrequestXMLTest(true);
