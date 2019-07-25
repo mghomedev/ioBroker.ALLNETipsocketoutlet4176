@@ -20,9 +20,16 @@ This is an ioBroker Home Automation Adapter for the ALLNET ALL4176 IP/WIFI Socke
 
 https://www.allnet.de/de/allnet-brand/produkte/neuheiten/p/allnet-all4176-ip-steckdosenleiste-6-fach-schaltbar-per-netzwerk/
 
-This device and the adapter allows to switch all sockets and reports all sensor data e.g. the used power,state of current switches, voltages currents etc.
+This device and the adapter allows to switch all sockets and reports all sensor data e.g. the used power,state of current switches, voltages currents etc. 
+It can also report any sensor data of additional connected sensors
 
 ( German: Adapter für die IP/WLAN gesteuerte 6-fach Steckdosenleiste von ALLNET ALL4176 )
+
+Additionally, it is also compatible with other ALLNET devices like 
+* ALLNET  ALL3419 Thermoter and all connectable sensors see https://www.allnet.de/nc/de/allnet-brand/support/treiber-firmware/download/134571/ even with temperature and hydro sensor attached 
+* ALLNET ALL4176 IP/WIFI Socket Outlet with 6 sockets https://www.allnet.de/de/allnet-brand/produkte/neuheiten/p/allnet-all4176-ip-steckdosenleiste-6-fach-schaltbar-per-netzwerk/ even with temperature and hydro sensor attached 
+* etc. (probably all ALLNET devices that have the same remote xml format )
+
 
 To use the adapter, the XML-Interface must be activated for a user in the ALLNET ALL4176 device, which means:
 - find out the hostname/ip address of your ALLNET device

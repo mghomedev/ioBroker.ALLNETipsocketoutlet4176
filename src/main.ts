@@ -26,7 +26,7 @@ declare global {
       syncseconds: number;
       testOnStartup: boolean;
       testOnStartupInvertSwitches: boolean;
-      debugVerboseAdapterConnectionInfo : boolean;
+      debugVerboseAdapterConnectionInfo: boolean;
 
       // Or use a catch-all approach
       [key: string]: any;
@@ -68,10 +68,10 @@ class Allnetipsocketoutlet4176 extends utils.Adapter {
     );
 
     this._allnet.debugOutputXML = this.config.debugVerboseAdapterConnectionInfo;
-    
+
     if (this._allnet.debugOutputXML) {
       this._allnet.error = this.log.error;
-      this._allnet.debug = this.log.debug;      
+      this._allnet.debug = this.log.debug;
     }
 
     if (this.config.testOnStartup) {
@@ -130,8 +130,10 @@ class Allnetipsocketoutlet4176 extends utils.Adapter {
 
   private async createAllAdapterStatesFromCurrentAllNetObject() {
     var allnet = this._allnet;
-    if (allnet == null || allnet.actors == null || allnet.actors.length == 0)
+    if (allnet == null || allnet.actors == null || allnet.sensors == null)
       return;
+
+    if (allnet.sensors.length == 0 && allnet.actors.length == 0) return;
 
     let adapterPrefix = this.name + "." + this.instance;
     this.log.info(
@@ -476,8 +478,12 @@ class Allnetipsocketoutlet4176 extends utils.Adapter {
     }
 
     var athis = this; // capture
-    allnet.onActorUpdated = function(obj : any) { athis.refreshAllAdapterStatesFromCurrentAllNetObject();};
-    allnet.onSensorUpdated = function(obj : any) { athis.refreshAllAdapterStatesFromCurrentAllNetObject();};
+    allnet.onActorUpdated = function(obj: any) {
+      athis.refreshAllAdapterStatesFromCurrentAllNetObject();
+    };
+    allnet.onSensorUpdated = function(obj: any) {
+      athis.refreshAllAdapterStatesFromCurrentAllNetObject();
+    };
     return;
   }
 
@@ -608,9 +614,19 @@ class Allnetipsocketoutlet4176 extends utils.Adapter {
 
           let newVal: boolean;
 
-          if (state.val === "0" || state.val === 0 || state.val === false || state.val === "false")
+          if (
+            state.val === "0" ||
+            state.val === 0 ||
+            state.val === false ||
+            state.val === "false"
+          )
             newVal = false;
-          else if (state.val === "1" || state.val === 1 || state.val === true || state.val === "true")
+          else if (
+            state.val === "1" ||
+            state.val === 1 ||
+            state.val === true ||
+            state.val === "true"
+          )
             newVal = true;
           else {
             this.log.error(

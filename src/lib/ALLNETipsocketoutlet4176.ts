@@ -76,6 +76,12 @@ export class ALLNETipsocketoutlet4176Sensor {
   public unit: string | undefined = undefined;
 }
 
+/**
+ * Adapter class to read and write to ALLNET xml API
+ * typically located on http://192.168.0.100/xml/
+ * compatible with ALLNET ALL4176 IP-Socket 6 actors and many additonal sensors like power sensor see https://www.allnet.de/de/allnet-brand/produkte/neuheiten/p/allnet-all4176-ip-steckdosenleiste-6-fach-schaltbar-per-netzwerk/
+ * also compatible with ALLNET  ALL3419 Thermoter and all connectable sensors see https://www.allnet.de/nc/de/allnet-brand/support/treiber-firmware/download/134571/
+ */
 export class ALLNETipsocketoutlet4176 {
   public ALLNETURL: string | undefined = undefined;
   public ALLNETUSER: string | undefined = undefined;
@@ -209,7 +215,7 @@ export class ALLNETipsocketoutlet4176 {
           this.fillActorFromJSON(ma, ja);
         }
 
-        this.debug("triggerUpdateSensorStates done for ActorCount=" + n);
+        this.debug("triggerUpdateActionStates done for ActorCount=" + n);
 
         for (let i = 0; i < n; i++) {
           this.onActorUpdated(this.actors[i]);
@@ -273,7 +279,7 @@ export class ALLNETipsocketoutlet4176 {
         for (let i = 0; i < n; i++) {
           this.onSensorUpdated(this._sensors[i]);
         }
-        return this._actors;
+        return this._sensors;
       })
       .catch((err: any) => {
         // catch

@@ -93,7 +93,9 @@ class Allnetipsocketoutlet4176 extends utils.Adapter {
     createAllAdapterStatesFromCurrentAllNetObject() {
         return __awaiter(this, void 0, void 0, function* () {
             var allnet = this._allnet;
-            if (allnet == null || allnet.actors == null || allnet.actors.length == 0)
+            if (allnet == null || allnet.actors == null || allnet.sensors == null)
+                return;
+            if (allnet.sensors.length == 0 && allnet.actors.length == 0)
                 return;
             let adapterPrefix = this.name + "." + this.instance;
             this.log.info("createAllAdapterStatesFromCurrentAllNetObject for ALLNETadapter=" +
@@ -314,8 +316,12 @@ class Allnetipsocketoutlet4176 extends utils.Adapter {
                 });
             }
             var athis = this; // capture
-            allnet.onActorUpdated = function (obj) { athis.refreshAllAdapterStatesFromCurrentAllNetObject(); };
-            allnet.onSensorUpdated = function (obj) { athis.refreshAllAdapterStatesFromCurrentAllNetObject(); };
+            allnet.onActorUpdated = function (obj) {
+                athis.refreshAllAdapterStatesFromCurrentAllNetObject();
+            };
+            allnet.onSensorUpdated = function (obj) {
+                athis.refreshAllAdapterStatesFromCurrentAllNetObject();
+            };
             return;
         });
     }
@@ -424,9 +430,15 @@ class Allnetipsocketoutlet4176 extends utils.Adapter {
                 if (k >= 0) {
                     let actorID = id.substr(k + stateprefix.length, id.length - k - statepostfix.length - stateprefix.length);
                     let newVal;
-                    if (state.val === "0" || state.val === 0 || state.val === false || state.val === "false")
+                    if (state.val === "0" ||
+                        state.val === 0 ||
+                        state.val === false ||
+                        state.val === "false")
                         newVal = false;
-                    else if (state.val === "1" || state.val === 1 || state.val === true || state.val === "true")
+                    else if (state.val === "1" ||
+                        state.val === 1 ||
+                        state.val === true ||
+                        state.val === "true")
                         newVal = true;
                     else {
                         this.log.error("Discarding invalid state value for ActorID=" +
