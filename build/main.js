@@ -21,6 +21,7 @@ class Allnetipsocketoutlet4176 extends utils.Adapter {
         this._inOnTimerTick = 0;
         this._timer = null;
         this._allnet = null;
+        this._triggerForceRefreshRunning = 0;
         this.on("ready", this.onReady.bind(this));
         this.on("objectChange", this.onObjectChange.bind(this));
         this.on("stateChange", this.onStateChange.bind(this));
@@ -459,39 +460,43 @@ class Allnetipsocketoutlet4176 extends utils.Adapter {
             if (id != null && id == adapterPrefix + ".triggerForceRefresh") {
                 if (!state.ack && state.val) {
                     this.log.debug("triggerUpdateAllStates triggered by triggerForceRefresh state change...");
-                    setTimeout(() => __awaiter(this, void 0, void 0, function* () {
-                        if (allnet == null)
-                            return;
-                        if (this._inOnTimerTick <= 0) {
-                            this._inOnTimerTick++;
-                            try {
-                                let hadTimer = this._timer != null;
-                                if (hadTimer)
-                                    this.destroyTimer();
-                                this.log.debug("triggerUpdateAllStates triggered by triggerForceRefresh state change now awaiting...");
-                                yield allnet.triggerUpdateAllStates();
-                                yield this.refreshAllAdapterStatesFromCurrentAllNetObject();
-                                if (hadTimer) {
-                                    this.initTimer(); // restart timer to avoid immediate updata gain
+                    this._triggerForceRefreshRunning++;
+                    if (this._triggerForceRefreshRunning == 1)
+                        setTimeout(() => __awaiter(this, void 0, void 0, function* () {
+                            if (allnet == null)
+                                return;
+                            if (this._inOnTimerTick <= 0) {
+                                this._inOnTimerTick++;
+                                try {
+                                    let hadTimer = this._timer != null;
+                                    if (hadTimer)
+                                        this.destroyTimer();
+                                    this.log.debug("triggerUpdateAllStates triggered by triggerForceRefresh state change now awaiting...");
+                                    yield allnet.triggerUpdateAllStates();
+                                    yield this.refreshAllAdapterStatesFromCurrentAllNetObject();
+                                    if (hadTimer) {
+                                        this.initTimer(); // restart timer to avoid immediate updata gain
+                                    }
+                                    this.log.debug("triggerUpdateAllStates triggered by triggerForceRefresh state change awaiting done...");
+                                    this.setState(adapterPrefix + ".triggerForceRefresh", {
+                                        val: false,
+                                        ack: true
+                                    });
                                 }
-                                this.log.debug("triggerUpdateAllStates triggered by triggerForceRefresh state change awaiting done...");
+                                finally {
+                                    this._inOnTimerTick--;
+                                    this._triggerForceRefreshRunning = 0;
+                                }
+                            }
+                            else {
+                                this.log.debug("triggerUpdateAllStates ignored due to timer update running ...");
                                 this.setState(adapterPrefix + ".triggerForceRefresh", {
                                     val: false,
                                     ack: true
                                 });
                             }
-                            finally {
-                                this._inOnTimerTick--;
-                            }
-                        }
-                        else {
-                            this.log.debug("triggerUpdateAllStates ignored due to timer update running ...");
-                            this.setState(adapterPrefix + ".triggerForceRefresh", {
-                                val: false,
-                                ack: true
-                            });
-                        }
-                    }), 0 /*as soon as possible*/);
+                            this._triggerForceRefreshRunning = 0;
+                        }), 500 /*rather soon */);
                 }
                 return;
             }
