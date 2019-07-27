@@ -128,6 +128,14 @@ class Allnetipsocketoutlet4176 extends utils.Adapter {
     }
   }
 
+  private destroyTimer() {
+    if (this._timer != null) {
+      clearTimeout(this._timer);
+      this.setStateAsync("timerIsRunning", { val: false, ack: true });
+      this._timer = null;
+    }
+  }
+
   private async createAllAdapterStatesFromCurrentAllNetObject() {
     var allnet = this._allnet;
     if (allnet == null || allnet.actors == null || allnet.sensors == null)
@@ -279,6 +287,26 @@ class Allnetipsocketoutlet4176 extends utils.Adapter {
       }
     );
 
+    await this.createState(
+      "",
+      "",
+      "triggerForceRefresh",
+      {
+        name: "triggerForceRefresh",
+        def: "",
+        type: "boolean",
+        read: false,
+        write: true,
+        role: "switch",
+        desc: "Trigger reading data from device and update states"
+      },
+      () => {
+        if (allnet != null) {
+          // doesnt make sense here to update  allnet.triggerUpdateAllStates();
+        }
+      }
+    );
+
     for (var aiter of allnet.actors) {
       let a = aiter; // make copy against function capturing "closure" issue in for loops
       if (a.id == null || a.id.length == 0) continue;
@@ -297,7 +325,7 @@ class Allnetipsocketoutlet4176 extends utils.Adapter {
           desc: "Actor id"
         },
         () => {
-          this.log.info(
+          this.log.debug(
             "createStateCallBack for a.id=" + a.id + " for id=" + a.id
           );
           if (a.id) {
@@ -326,7 +354,7 @@ class Allnetipsocketoutlet4176 extends utils.Adapter {
           desc: "Actor name"
         },
         () => {
-          this.log.info(
+          this.log.debug(
             "createStateCallBack for a.id=" + a.id + " for name=" + a.name
           );
           if (a.name) {
@@ -356,7 +384,7 @@ class Allnetipsocketoutlet4176 extends utils.Adapter {
           desc: "Actor current switch status"
         },
         () => {
-          this.log.info(
+          this.log.debug(
             "createStateCallBack for a.id=" + a.id + " for state=" + a.state
           );
           this.setStateAsync(
@@ -478,10 +506,12 @@ class Allnetipsocketoutlet4176 extends utils.Adapter {
     }
 
     var athis = this; // capture
-    allnet.onActorUpdated = function(obj: any) {
+    allnet.onActorUpdated = (obj: any) => {
+      if (this._inOnTimerTick > 0) return; // refresh will follow up in onTimerTick code itself
       athis.refreshAllAdapterStatesFromCurrentAllNetObject();
     };
-    allnet.onSensorUpdated = function(obj: any) {
+    allnet.onSensorUpdated = (obj: any) => {
+      if (this._inOnTimerTick > 0) return; // refresh will follow up in onTimerTick code itself
       athis.refreshAllAdapterStatesFromCurrentAllNetObject();
     };
     return;
@@ -493,7 +523,7 @@ class Allnetipsocketoutlet4176 extends utils.Adapter {
       return;
 
     let adapterPrefix = this.name + "." + this.instance;
-    this.log.info(
+    this.log.debug(
       "refreshAllAdapterStatesFromCurrentAllNetObject for ALLNETadapter=" +
         adapterPrefix
     );
@@ -533,9 +563,19 @@ class Allnetipsocketoutlet4176 extends utils.Adapter {
     }
   }
 
+  private _inOnTimerTick: number = 0;
   private async onTimerTick() {
     if (this._allnet == null) return;
+    var now = Date.now();
 
+    if (this._inOnTimerTick > 0) {
+      this.log.debug("onTimerTick reentrant ignored  now=" + now);
+      return;
+    } else {
+      this.log.debug("onTimerTick started...  now=" + now);
+    }
+    this._inOnTimerTick++;
+    try {
     await this._allnet.triggerUpdateAllStates();
 
     if (this._allnet.actors.length <= 0) {
@@ -544,6 +584,10 @@ class Allnetipsocketoutlet4176 extends utils.Adapter {
       await this.refreshAllAdapterStatesFromCurrentAllNetObject();
     }
     await this.initTimer();
+    } finally {
+      this.log.debug("onTimerTick finished.  now=" + now);
+      this._inOnTimerTick--;
+  }
   }
 
   private _timer: NodeJS.Timeout | null = null;
@@ -554,12 +598,8 @@ class Allnetipsocketoutlet4176 extends utils.Adapter {
    */
   private onUnload(callback: () => void): void {
     try {
-      if (this._timer != null) {
-        clearTimeout(this._timer);
-        this.setStateAsync("timerIsRunning", { val: false, ack: true });
-        this._timer = null;
-      }
-      this.log.info("cleaned everything up...");
+      this.destroyTimer();
+      this.log.debug("cleaned everything up...");
       callback();
     } catch (e) {
       callback();
@@ -575,10 +615,10 @@ class Allnetipsocketoutlet4176 extends utils.Adapter {
   ): void {
     if (obj) {
       // The object was changed
-      this.log.info(`object ${id} changed: ${JSON.stringify(obj)}`);
+      this.log.debug(`object ${id} changed: ${JSON.stringify(obj)}`);
     } else {
       // The object was deleted
-      this.log.info(`object ${id} deleted`);
+      this.log.debug(`object ${id} deleted`);
     }
   }
 
@@ -595,8 +635,56 @@ class Allnetipsocketoutlet4176 extends utils.Adapter {
 
     if (state) {
       // The state was changed
-      this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
+      this.log.debug(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
       let adapterPrefix = this.name + "." + this.instance;
+
+      if (id != null && id == adapterPrefix + ".triggerForceRefresh") {         
+        if (!state.ack && state.val) {
+          this.log.debug(
+            "triggerUpdateAllStates triggered by triggerForceRefresh state change..."
+          );
+          setTimeout(async () => {
+            if (allnet == null) return;
+            if (this._inOnTimerTick <= 0) {
+              this._inOnTimerTick++;
+
+              try {
+                let hadTimer = this._timer != null;
+
+                if (hadTimer) this.destroyTimer();
+                this.log.debug(
+                  "triggerUpdateAllStates triggered by triggerForceRefresh state change now awaiting..."
+                );
+                await allnet.triggerUpdateAllStates();
+                await this.refreshAllAdapterStatesFromCurrentAllNetObject();
+                
+                if (hadTimer) {
+                  this.initTimer(); // restart timer to avoid immediate updata gain
+                }
+                this.log.debug(
+                  "triggerUpdateAllStates triggered by triggerForceRefresh state change awaiting done..."
+                );
+                this.setState(adapterPrefix + ".triggerForceRefresh", {
+                  val: false,
+                  ack: true
+                });
+              } finally {
+                this._inOnTimerTick--;
+              }
+            }else {
+              this.log.debug(
+                "triggerUpdateAllStates ignored due to timer update running ..."
+              );
+              this.setState(adapterPrefix + ".triggerForceRefresh", {
+                val: false,
+                ack: true
+              });
+            }
+          }, 0 /*as soon as possible*/);
+        }
+        return;
+      }
+
       let stateprefix = ".actors.actor_";
       let statepostfix = "_state";
       if (
@@ -640,7 +728,7 @@ class Allnetipsocketoutlet4176 extends utils.Adapter {
 
           var a = allnet.actors.find(x => x.id == actorID);
           if (a != null) {
-            this.log.info(
+            this.log.debug(
               "Sending State Change for ActorID=" +
                 actorID +
                 " to change state to " +
@@ -660,7 +748,7 @@ class Allnetipsocketoutlet4176 extends utils.Adapter {
       }
     } else {
       // The state was deleted
-      this.log.info(`state ${id} deleted`);
+      this.log.debug(`state ${id} deleted`);
     }
   }
 

@@ -106,9 +106,9 @@ export class ALLNETipsocketoutlet4176 {
     console.log("ALLNETIPSocketoutlet4176Error:" + info);
   };
 
-  public onActorUpdated = function(obj: any) {};
+  public onActorUpdated = function(obj: any /* argument null means all*/) {};
 
-  public onSensorUpdated = function(obj: any) {};
+  public onSensorUpdated = function(obj: any /* argument null means all*/) {};
 
   constructor(ALLNETURL: string, ALLNETUSER: string, ALLNETPASSWORD: string) {
     this.ALLNETURL = ALLNETURL;
@@ -217,9 +217,10 @@ export class ALLNETipsocketoutlet4176 {
 
         this.debug("triggerUpdateActionStates done for ActorCount=" + n);
 
-        for (let i = 0; i < n; i++) {
-          this.onActorUpdated(this.actors[i]);
-        }
+        this.onActorUpdated(null);
+        /*for (let i = 0; i < n; i++) {
+          onActorUpdated(this.actors[i]);
+        }*/
 
         return this._actors;
       })
@@ -276,9 +277,10 @@ export class ALLNETipsocketoutlet4176 {
         }
         this.debug("triggerUpdateSensorStates done for SensorCount=" + n);
 
-        for (let i = 0; i < n; i++) {
+        this.onSensorUpdated(null);
+        /*for (let i = 0; i < n; i++) {
           this.onSensorUpdated(this._sensors[i]);
-        }
+        }*/
         return this._sensors;
       })
       .catch((err: any) => {
