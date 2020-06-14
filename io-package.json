@@ -1,8 +1,11 @@
 {
 	"common": {
 		"name": "allnetipsocketoutlet4176",
-		"version": "0.0.1",
+		"version": "0.0.2",
 		"news": {
+			"0.0.2": {
+				"en": "require emscript 2017 and security updates"				
+			},
 			"0.0.1": {
 				"en": "initial release",
 				"de": "Erstveröffentlichung",

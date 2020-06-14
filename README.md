@@ -114,6 +114,9 @@ For later updates, the above procedure is not necessary. Just do the following:
 
 ## Changelog
 
+### 0.0.2
+* (mghomedev) updates external packages and typescript javascript target version to es2017 
+
 ### 0.0.1
 * (mghomedev) initial release
 
