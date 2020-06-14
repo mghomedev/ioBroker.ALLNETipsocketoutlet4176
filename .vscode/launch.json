@@ -8,7 +8,7 @@
             "type": "node",
             "request": "launch",
             "name": "Launch ALLNETIPTestSocketTest",
-            "program": "${workspaceFolder}/src/lib/ALLNETipsocketoutlet4176.ts",
+            "program": "${workspaceFolder}/src/lib/allnetipsocketoutlet4176.ts",
             "preLaunchTask": "tsc: build - tsconfig.build.json",
             "outFiles": [
                 "${workspaceFolder}/build/**/*.js"

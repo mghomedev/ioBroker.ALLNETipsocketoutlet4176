@@ -8,7 +8,7 @@ import * as utils from "@iobroker/adapter-core";
 import {
   ALLNETipsocketoutlet4176,
   ALLNETipsocketoutlet4176Actor
-} from "./lib/ALLNETipsocketoutlet4176";
+} from "./lib/allnetipsocketoutlet4176";
 import { isNullOrUndefined } from "util";
 
 // Load your modules here, e.g.:

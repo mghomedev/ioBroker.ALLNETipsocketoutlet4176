@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 // The adapter-core module gives you access to the core ioBroker functions
 // you need to create an adapter
 const utils = require("@iobroker/adapter-core");
-const ALLNETipsocketoutlet4176_1 = require("./lib/ALLNETipsocketoutlet4176");
+const allnetipsocketoutlet4176_1 = require("./lib/allnetipsocketoutlet4176");
 class Allnetipsocketoutlet4176 extends utils.Adapter {
     constructor(options = {}) {
         super(Object.assign(Object.assign({}, options), { name: "allnetipsocketoutlet4176" }));
@@ -30,7 +30,7 @@ class Allnetipsocketoutlet4176 extends utils.Adapter {
         this.log.info("config allnetdevicehost: " + this.config.allnetdeviceurl);
         this.log.info("config allnetdeviceusername: " + this.config.allnetdeviceusername);
         this.log.info("creating ALLNETipsocketoutlet4176 class ...");
-        this._allnet = new ALLNETipsocketoutlet4176_1.ALLNETipsocketoutlet4176(this.config.allnetdeviceurl, this.config.allnetdeviceusername, this.config.allnetdevicepassword);
+        this._allnet = new allnetipsocketoutlet4176_1.ALLNETipsocketoutlet4176(this.config.allnetdeviceurl, this.config.allnetdeviceusername, this.config.allnetdevicepassword);
         this._allnet.debugOutputXML = this.config.debugVerboseAdapterConnectionInfo;
         if (this._allnet.debugOutputXML) {
             this._allnet.error = this.log.error;
