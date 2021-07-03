@@ -64,6 +64,10 @@
     "test": "npm run test:ts && npm run test:package",
     "lint": "eslint --ext .ts src"
   },
+  "files": [
+    "lib",
+    "src"
+  ],
   "bugs": {
     "url": "https://github.com/mghomedev/ioBroker.allnetipsocketoutlet4176/issues"
   },

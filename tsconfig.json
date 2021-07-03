@@ -35,7 +35,8 @@
 		"watch": false
 	},
 	"include": [
-		"**/*.ts"
+		"**/*.ts",
+		"lib/**.ts"
 	],
 	"exclude": [
 		"build/**",
