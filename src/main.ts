@@ -293,7 +293,7 @@ class Allnetipsocketoutlet4176 extends utils.Adapter {
       "triggerForceRefresh",
       {
         name: "triggerForceRefresh",
-        def: "",
+        def: undefined,
         type: "boolean",
         read: false,
         write: true,
@@ -372,12 +372,11 @@ class Allnetipsocketoutlet4176 extends utils.Adapter {
       await this.createState(
         "",
         "actors",
-        "actor_" + a.id + "_state",
-        "state",
+        "actor_" + a.id + "_state",        
         {
           name: "actor_" + a.id + "_state",
           def: a.state,
-          type: "string",
+          type: "boolean",
           read: true,
           write: true,
           role: "switch",
@@ -457,11 +456,10 @@ class Allnetipsocketoutlet4176 extends utils.Adapter {
       await this.createState(
         "",
         "sensors",
-        "sensor_" + s.id + "_value",
-        "value",
+        "sensor_" + s.id + "_value",        
         {
           name: "sensor_" + s.id + "_value",
-          def: s.current,
+          def: Number(s.current),
           type: "number",
           read: true,
           write: false,
@@ -472,7 +470,7 @@ class Allnetipsocketoutlet4176 extends utils.Adapter {
           this.setStateAsync(
             adapterPrefix + ".sensors.sensor_" + s.id + "_value",
             {
-              val: s.current,
+              val: Number(s.current),
               ack: true
             }
           );
@@ -482,8 +480,7 @@ class Allnetipsocketoutlet4176 extends utils.Adapter {
       await this.createState(
         "",
         "sensors",
-        "sensor_" + s.id + "_unit",
-        "unit",
+        "sensor_" + s.id + "_unit",        
         {
           name: "sensor_" + s.id + "_unit",
           def: s.unit,
@@ -557,7 +554,7 @@ class Allnetipsocketoutlet4176 extends utils.Adapter {
       if (s.id == null || s.id.length == 0) continue;
 
       this.setStateAsync(adapterPrefix + ".sensors.sensor_" + s.id + "_value", {
-        val: s.current,
+        val: Number(s.current),
         ack: true
       });
     }
