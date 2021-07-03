@@ -48,25 +48,13 @@ To use the adapter, the XML-Interface must be activated for a user in the ALLNET
 The implementation is based on my interface class "ALLNETipsocketoutlet4176" which is available in the lib folder and on github here https://github.com/mghomedev/ioBroker.ALLNETipsocketoutlet4176/blob/master/src/lib/ALLNETipsocketoutlet4176.ts
 
 ### Getting started
-
-You are almost done, only a few steps left:
-1. Create a new repository on GitHub with the name `ioBroker.allnetipsocketoutlet4176`
-1. Initialize the current folder as a new git repository:  
-	```bash
-	git init
-	git add .
-	git commit -m "Initial commit"
-	```
-1. Link your local repository with the one on GitHub:  
-	```bash
-	git remote add origin https://github.com/mghomedev/ioBroker.allnetipsocketoutlet4176
-	```
-
-1. Push all files to the GitHub repo:  
-	```bash
-	git push origin master
-	```
-1. Head over to [src/main.ts](src/main.ts) and start programming!
+0. Clone git to iobroker/opt/node_modules/iobroker.allnetipsocketoutlet4176   (all lowercase!)  
+1. Let npm get all packages 
+npm install
+npm update
+2. Build with typescript
+tsc -p tsconfig.build.json
+This should create the javascript builds in the build-folder
 
 ### Scripts in `package.json`
 Several npm scripts are predefined for your convenience. You can run them using `npm run <scriptname>`
