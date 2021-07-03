@@ -1,6 +1,6 @@
 {
   "name": "iobroker.allnetipsocketoutlet4176",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "ALLNET IP Socket Outlet 4176 with 6 sockets",
   "author": {
     "name": "mghomedev",

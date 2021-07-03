@@ -102,6 +102,9 @@ For later updates, the above procedure is not necessary. Just do the following:
 
 ## Changelog
 
+### 0.0.3
+* (mghomedev) fixes for compatibility with latest iobroker js-controller
+
 ### 0.0.2
 * (mghomedev) updates external packages and typescript javascript target version to es2017 
 
