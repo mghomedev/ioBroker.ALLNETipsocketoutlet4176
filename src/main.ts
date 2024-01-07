@@ -4,7 +4,8 @@
 
 // The adapter-core module gives you access to the core ioBroker functions
 // you need to create an adapter
-import * as utils from "@iobroker/adapter-core";
+const utils = require("@iobroker/adapter-core"); // Get common adapter utils
+
 import {
   ALLNETipsocketoutlet4176,
   ALLNETipsocketoutlet4176Actor
