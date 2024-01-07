@@ -102,6 +102,9 @@ For later updates, the above procedure is not necessary. Just do the following:
 
 ## Changelog
 
+### 0.0.4
+* (mghomedev) fixes for compatibility with latest iobroker js-controller 5
+
 ### 0.0.3
 * (mghomedev) fixes for compatibility with latest iobroker js-controller
 
