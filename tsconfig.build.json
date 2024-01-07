@@ -1,5 +1,5 @@
 {
-	"extends": "./tsconfig.json",
+	"extends": "./tsconfig.base.json",
 	// Modified config to only compile .ts-files in the src dir
 	"compilerOptions": {
 		"allowJs": false,

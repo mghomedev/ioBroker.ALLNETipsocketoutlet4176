@@ -32,12 +32,10 @@
 
 		"sourceMap": true, //see https://code.visualstudio.com/docs/typescript/typescript-debugging
 		"inlineSourceMap": false,
-		"watch": false
 	},
 	"include": [
-		"**/*.ts",
-		"lib/**.ts"
-	],
+		"1src/**/*.ts",
+	],       
 	"exclude": [
 		"build/**",
 		"node_modules/**",
