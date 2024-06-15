@@ -102,8 +102,11 @@ For later updates, the above procedure is not necessary. Just do the following:
 
 ## Changelog
 
+### 0.0.6
+* (mghomedev) version increased after npm package updates
+
 ### 0.0.5
-* (mghomedev) version incread for npm
+* (mghomedev) version increased for npm
 
 ### 0.0.4
 * (mghomedev) fixes for compatibility with latest iobroker js-controller 5
