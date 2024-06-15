@@ -102,6 +102,9 @@ For later updates, the above procedure is not necessary. Just do the following:
 
 ## Changelog
 
+### 0.0.8
+* (mghomedev) version increased after npm package updates - downgraded node-fetch again to version 2.6.1 to get rid if iobroker errors regarding 2.6.1 ERR_REQUIRE_ESM see https://stackoverflow.com/questions/69087292/requirenode-fetch-gives-err-require-esm
+
 ### 0.0.7
 * (mghomedev) version increased after npm package updates - include lib
 
